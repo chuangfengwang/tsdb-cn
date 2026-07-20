@@ -11,7 +11,7 @@ podman run \
 -e POSTGRES_PASSWORD=${tsdb_password} \
 -p 15435:5432 \
 -v $(pwd)/tsdb_data:/home/postgres/pgdata/data:Z,U \
-ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.0
+ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.1
 
 # 调试容器
 podman exec -it tsdb /bin/bash
@@ -98,6 +98,9 @@ SELECT * FROM ts_debug('jiebaqry', 'PostgreSQL结合结巴分词非常强大');
 CREATE EXTENSION IF NOT EXISTS pg_textsearch;
 CREATE EXTENSION IF NOT EXISTS pg_jieba;
 
+create database if not EXISTS pg_search_demo;
+\c pg_search_demo
+       
 CREATE TABLE documents (id bigserial PRIMARY KEY, content text);
 INSERT INTO documents (content) VALUES
     ('PostgreSQL is a powerful database system'),
@@ -221,3 +224,4 @@ WITH simple; -- simple jieba_stem
 SELECT * FROM ts_debug('public.log_jiebacfg', 'PostgreSQL结合结巴分词非常强大	database system');
 
 ```
+
