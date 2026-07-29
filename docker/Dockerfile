@@ -79,9 +79,10 @@ RUN git clone https://github.com/timescale/pg_textsearch.git \
     && rm -rf pg_textsearch
 
 # ----------------------------------------------------------
-# 5. 覆盖配置文件, 启用 pg_textsearch,zhparser,pg_jieba 库
+# 5. 配置默认加载的扩展和参数. 通过 Init 脚本启用 pg_textsearch,zhparser,pg_jieba 库
 # ----------------------------------------------------------
-COPY postgresql.conf /home/postgres/pgdata/data/postgresql.conf
+RUN echo "ALTER SYSTEM SET shared_preload_libraries = pg_stat_statements, timescaledb, pg_textsearch, zhparser, pg_jieba;" > /docker-entrypoint-initdb.d/99-init-config.sql \
+    && echo "ALTER SYSTEM SET \"zhparser.dict_in_memory\" = 'on';" >> /docker-entrypoint-initdb.d/020_init_search_config.sql
 
 # ----------------------------------------------------------
 # 6. 清理构建环境

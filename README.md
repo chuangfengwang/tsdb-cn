@@ -10,7 +10,7 @@ Start the container. Here we use podman as an example, but you can also use dock
 
 ```bash
 # Pull the image
-podman pull ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.1
+podman pull ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.2
 
 # Start the image
 
@@ -25,7 +25,7 @@ podman run \
 -e POSTGRES_PASSWORD=${tsdb_password} \
 -p 15435:5432 \
 -v $(pwd)/tsdb_data:/home/postgres/pgdata/data:Z,U \
-ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.1
+ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.2
 
 ```
 

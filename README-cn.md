@@ -10,7 +10,7 @@ tsdb-cn 是一个基于 TimescaleDB 的中文全文检索数据库镜像, 集成
 
 ```bash
 # 拉取镜像
-podman pull ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.1
+podman pull ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.2
 
 # 启动镜像
 # 环境变量里配置数据库默认密码
@@ -24,7 +24,7 @@ podman run \
 -e POSTGRES_PASSWORD=${tsdb_password} \
 -p 15435:5432 \
 -v $(pwd)/tsdb_data:/home/postgres/pgdata/data:Z,U \
-ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.1
+ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.2
 
 ```
 

@@ -11,7 +11,7 @@ podman run \
 -e POSTGRES_PASSWORD=${tsdb_password} \
 -p 15435:5432 \
 -v $(pwd)/tsdb_data:/home/postgres/pgdata/data:Z,U \
-ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.1
+ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-v1.1.2
 
 # 调试容器
 podman exec -it tsdb /bin/bash
@@ -25,7 +25,7 @@ psql -d "postgres://postgres:${echo -n "${tsdb_password}" | jq -sRr @uri}@podman
 postgresql.conf
 
 ```
-shared_preload_libraries = 'timescaledb,pg_textsearch,zhparser,pg_jieba'		# (change requires restart)
+shared_preload_libraries = 'pg_stat_statements,timescaledb,pg_textsearch,zhparser,pg_jieba'		# (change requires restart)
 
 #------------------------------------------------------------------------------
 # PLUGIN MANAGEMENT
