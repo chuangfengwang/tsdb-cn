@@ -34,7 +34,7 @@ podman login --get-login ghcr.io
 echo "$ghcr_token" | podman --connection kubuntu26 login ghcr.io -u "$ghcr_user" --password-stdin
 podman --connection kubuntu26 login --get-login ghcr.io
 
-export tsdb_cn_version='v1.1.1'
+export tsdb_cn_version='v1.1.2'
 
 # 在不同架构主机上构建并推送 ghcr
 podman --connection kubuntu26 build -t localhost/timescale-bm25-cn:pg17-${tsdb_cn_version}-amd64 .
