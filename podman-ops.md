@@ -52,14 +52,17 @@ podman pull ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-${tsdb_cn_version}-arm
 
 
 # 创建 manifest list
-podman manifest create tsdb-bm25cn-multi-arch
+podman manifest create tsdb-bm25cn-multi-arch-${tsdb_cn_version}
 
 # 添加各架构镜像
-podman manifest add tsdb-bm25cn-multi-arch ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-${tsdb_cn_version}-amd64
-podman manifest add tsdb-bm25cn-multi-arch ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-${tsdb_cn_version}-arm64
+podman manifest add tsdb-bm25cn-multi-arch-${tsdb_cn_version} ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-${tsdb_cn_version}-amd64
+podman manifest add tsdb-bm25cn-multi-arch-${tsdb_cn_version} ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-${tsdb_cn_version}-arm64
 
 # 推送最终 manifest list
-podman manifest push tsdb-bm25cn-multi-arch ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-${tsdb_cn_version}
+podman manifest push tsdb-bm25cn-multi-arch-${tsdb_cn_version} ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-${tsdb_cn_version}
+
+# 清理 manifest 避免影响后续构建
+podman manifest rm tsdb-bm25cn-multi-arch-${tsdb_cn_version}
 
 # 清理临时标签（可选）
 podman rmi ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-${tsdb_cn_version}-amd64 ghcr.io/chuangfengwang/timescale-bm25-cn:pg17-${tsdb_cn_version}-arm64
