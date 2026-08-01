@@ -81,7 +81,8 @@ postgres=# SELECT * FROM ts_debug('jiebaqry', 'PostgreSQL结合结巴分词非�
 
 ```
 
-创建自定义分词器配置
+# 创建自定义分词器配置
+
 ```pgsql
 -- 创建自定义分词器配置(log_jiebacfg 是自定义搜索配置的名称)
 DROP TEXT SEARCH CONFIGURATION IF EXISTS public.log_jiebacfg;
@@ -172,6 +173,12 @@ postgres=# SELECT * FROM ts_debug('public.log_jiebacfg', 'PostgreSQL结合结巴
 ```pgsql
 create database pg_search_demo;
 \c pg_search_demo
+
+-- 在新建的数据库中启用插件
+CREATE EXTENSION IF NOT EXISTS pg_textsearch;
+CREATE EXTENSION IF NOT EXISTS pg_jieba;
+
+-- 按上文操作创建自定义分词配置: log_jiebacfg
 
 CREATE TABLE documents (id bigserial PRIMARY KEY, content text);
 INSERT INTO documents (content) VALUES

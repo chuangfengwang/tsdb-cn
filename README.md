@@ -86,45 +86,86 @@ postgres=# SELECT * FROM ts_debug('jiebaqry', 'PostgreSQL结合结巴分词非�
 # Create a Custom Tokenizer Configuration
 
 ```pgsql
--- View loaded extensions
-postgres=# SHOW shared_preload_libraries;
-          shared_preload_libraries
----------------------------------------------
- timescaledb,pg_textsearch,zhparser,pg_jieba
+-- Create a custom tokenizer configuration (log_jiebacfg is the name of the custom search configuration).
+DROP TEXT SEARCH CONFIGURATION IF EXISTS public.log_jiebacfg;
+CREATE TEXT SEARCH CONFIGURATION public.log_jiebacfg (PARSER = jieba);
 
--- Enable extensions
-CREATE EXTENSION IF NOT EXISTS pg_textsearch;
-CREATE EXTENSION IF NOT EXISTS pg_jieba;
+-- Configure part-of-speech mapping, excluding the x (unknown) part of speech.
+ALTER TEXT SEARCH CONFIGURATION public.log_jiebacfg 
+ADD MAPPING FOR 
+ a   , -- adjective
+ ad  , -- ad
+ ag  , -- ag
+ an  , -- an
+ b   , -- difference
+ c   , -- conjunction
+ d   , -- adverb
+ df  , -- df
+ dg  , -- dg
+ e   , -- exclamation
+ eng , -- letter
+ f   , -- direction noun
+ g   , -- morpheme
+ h   , -- h
+ i   , -- idiom
+ j   , -- abbreviate
+ k   , -- k
+ l   , -- temporary idiom
+ m   , -- numeral
+ mg  , -- mg
+ mq  , -- numeral-classifier compound
+ n   , -- noun
+ ng  , -- ng
+ nr  , -- person's name
+ nrfg, -- nrfg
+ nrt , -- nrt
+ ns  , -- location
+ nt  , -- organization
+ nz  , -- other proper noun
+ o   , -- onomatopoeia
+ p   , -- prepositional
+ q   , -- quantity
+ r   , -- pronoun
+ rg  , -- rg
+ rr  , -- rr
+ rz  , -- rz
+ s   , -- space
+ t   , -- time
+ tg  , -- tg
+ u   , -- auxiliary
+ ud  , -- ud
+ ug  , -- ug
+ uj  , -- uj
+ ul  , -- ul
+ uv  , -- uv
+ uz  , -- uz
+ v   , -- verb
+ vd  , -- vd
+ vg  , -- vg
+ vi  , -- vi
+ vn  , -- vn
+ vq  , -- vq
+-- x   , -- unknown
+ y   , -- modal verbs
+ z   , -- z
+ zg   -- zg
+WITH simple;
 
--- Use the default tokenizer configuration (public.jiebacfg, public.jiebaqry)
-postgres=# SELECT * FROM ts_debug('jiebacfg', 'PostgreSQL结合结巴分词非常强大	database system');
+
+-- Verify the tokenization/segmentation effect.
+postgres=# SELECT * FROM ts_debug('public.log_jiebacfg', 'PostgreSQL结合结巴分词非常强大	database system');
  alias | description |   token    | dictionaries | dictionary |   lexemes
 -------+-------------+------------+--------------+------------+--------------
- eng   | letter      | PostgreSQL | {jieba_stem} | jieba_stem | {postgresql}
- v     | verb        | 结合       | {jieba_stem} | jieba_stem | {结合}
- n     | noun        | 结巴       | {jieba_stem} | jieba_stem | {结巴}
- n     | noun        | 分词       | {jieba_stem} | jieba_stem | {分词}
- d     | adverb      | 非常       | {jieba_stem} | jieba_stem | {非常}
- a     | adjective   | 强大       | {jieba_stem} | jieba_stem | {强大}
- x     | unknown     |            | {jieba_stem} | jieba_stem | {"	"}
- eng   | letter      | database   | {jieba_stem} | jieba_stem | {database}
- x     | unknown     |            | {jieba_stem} | jieba_stem | {" "}
- eng   | letter      | system     | {jieba_stem} | jieba_stem | {}
-(10 行记录)
-
-postgres=# SELECT * FROM ts_debug('jiebaqry', 'PostgreSQL结合结巴分词非常强大	database system');
- alias | description |   token    | dictionaries | dictionary |   lexemes
--------+-------------+------------+--------------+------------+--------------
- eng   | letter      | PostgreSQL | {jieba_stem} | jieba_stem | {postgresql}
- v     | verb        | 结合       | {jieba_stem} | jieba_stem | {结合}
- n     | noun        | 结巴       | {jieba_stem} | jieba_stem | {结巴}
- n     | noun        | 分词       | {jieba_stem} | jieba_stem | {分词}
- d     | adverb      | 非常       | {jieba_stem} | jieba_stem | {非常}
- a     | adjective   | 强大       | {jieba_stem} | jieba_stem | {强大}
- x     | unknown     |            | {jieba_stem} | jieba_stem | {"	"}
- eng   | letter      | database   | {jieba_stem} | jieba_stem | {database}
- x     | unknown     |            | {jieba_stem} | jieba_stem | {" "}
- eng   | letter      | system     | {jieba_stem} | jieba_stem | {}
+ eng   | letter      | PostgreSQL | {simple}     | simple     | {postgresql}
+ v     | verb        | 结合       | {simple}     | simple     | {结合}
+ n     | noun        | 结巴       | {simple}     | simple     | {结巴}
+ n     | noun        | 分词       | {simple}     | simple     | {分词}
+ d     | adverb      | 非常       | {simple}     | simple     | {非常}
+ a     | adjective   | 强大       | {simple}     | simple     | {强大}
+ x     | unknown     |            | {}           |            |
+ eng   | letter      | database   | {simple}     | simple     | {database}
+ x     | unknown     |            | {}           |            |
+ eng   | letter      | system     | {simple}     | simple     | {system}
 (10 行记录)
 ```
 
@@ -133,6 +174,12 @@ postgres=# SELECT * FROM ts_debug('jiebaqry', 'PostgreSQL结合结巴分词非�
 ```pgsql
 create database pg_search_demo;
 \c pg_search_demo
+
+-- Enable extensions
+CREATE EXTENSION IF NOT EXISTS pg_textsearch;
+CREATE EXTENSION IF NOT EXISTS pg_jieba;
+
+-- Create custom tokenizer configuration (log_jiebacfg) as above.
 
 CREATE TABLE documents (id bigserial PRIMARY KEY, content text);
 INSERT INTO documents (content) VALUES
