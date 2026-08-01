@@ -170,7 +170,7 @@ postgres=# SELECT * FROM ts_debug('public.log_jiebacfg', 'PostgreSQL结合结巴
 # 联合使用 pg_jieba 和 pg_textsearch 插件
 
 ```pgsql
-create database if not EXISTS pg_search_demo;
+create database pg_search_demo;
 \c pg_search_demo
 
 CREATE TABLE documents (id bigserial PRIMARY KEY, content text);

@@ -131,7 +131,7 @@ postgres=# SELECT * FROM ts_debug('jiebaqry', 'PostgreSQL结合结巴分词非�
 # Using pg_jieba and pg_textsearch Extensions Together
 
 ```pgsql
-create database if not EXISTS pg_search_demo;
+create database pg_search_demo;
 \c pg_search_demo
 
 CREATE TABLE documents (id bigserial PRIMARY KEY, content text);

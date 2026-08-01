@@ -98,7 +98,7 @@ SELECT * FROM ts_debug('jiebaqry', 'PostgreSQL结合结巴分词非常强大');
 CREATE EXTENSION IF NOT EXISTS pg_textsearch;
 CREATE EXTENSION IF NOT EXISTS pg_jieba;
 
-create database if not EXISTS pg_search_demo;
+create database pg_search_demo;
 \c pg_search_demo
        
 CREATE TABLE documents (id bigserial PRIMARY KEY, content text);
